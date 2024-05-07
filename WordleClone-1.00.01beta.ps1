@@ -88,7 +88,7 @@ while (!($solved) -and ($guessNumber -lt 6)) {
     }
 }
 if ($solved) {
-    Write-Host "`n Answer: $($word.ToUpper())" -ForegroundColor White -BackgroundColor Green
+    Write-Host "`nAnswer : $($word.ToUpper())" -ForegroundColor White -BackgroundColor Green
 }
 else {  
     Write-Host "`nAnswer : $($word.ToUpper())" -ForegroundColor White -BackgroundColor DarkRed
