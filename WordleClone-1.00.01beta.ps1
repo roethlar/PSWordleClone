@@ -24,7 +24,7 @@ function PrintGuesses($guessNumber) {
     for ($x = 1; $x -le $guessNumber; $x++) {
         Write-Host "`nGuess $($x): " -NoNewline
         foreach ($printLetter in ($guessReport | Where-Object {$_.Attempt -eq $x})) {
-            Write-Host "$($printLetter.Letter)" -BackgroundColor "$($printLetter.Color)" -ForegroundColor White -NoNewline
+            Write-Host "$($printLetter.Letter)" -ForegroundColor "$($printLetter.Color)" -NoNewline
         }
     }
 }
@@ -42,6 +42,7 @@ $guessNumber = 0
 $Guess = $null
 $solved = $false
 $guessReport = @()
+Clear-Host 
 PrintAlphabet
 while (!($solved) -and ($guessNumber -lt 6)) {
     $guessNumber++
