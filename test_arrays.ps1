@@ -7,8 +7,13 @@ for ($ascii = 65; $ascii -le 90; $ascii++) {
 }
 
 $answerWord = "HAPPYMONKEY"
-$guess =      "PAPOMAPPEYR"
+$guess =      "PAPGMAPPEYR"
+$guessArray = $guess.ToCharArray()
+$answerWordArray = $answerWord.ToCharArray()
+$guessLetterCounts = @()
+$answerLetterCounts = @()
 
+<#
 $guessDisplay = @()
 foreach ($gl in $guess.ToCharArray()) {
     $glcount = 0
@@ -36,3 +41,21 @@ foreach ($gl in $guess.ToCharArray()) {
     }
 }
 $guessDisplay
+#>
+$guessUniques = $guessArray | Select-Object -Unique
+foreach ($gu in $guessUniques) {
+    $b = @{}
+    $b.Letter = $gu
+    $b.count = ($guessArray | Where-Object {$_ -eq $gu}).Count
+    $guessLetterCounts += [PSCustomObject]$b
+}
+$guessLetterCounts | Format-Table -AutoSize
+"`n`r"
+$answerWordUniques = $answerWordArray | Select-Object -Unique
+foreach ($au in $answerWordUniques) {
+    $c = @{}
+    $c.Letter = $au
+    $c.count = ($answerWordArray | Where-Object {$_ -eq $au}).Count
+    $answerLetterCounts += [PSCustomObject]$c
+}
+$answerLetterCounts | Format-Table -AutoSize
