@@ -43,6 +43,7 @@ $Guess = $null
 $solved = $false
 $guessReport = @()
 Clear-Host 
+Write-Host "`n`r"
 PrintAlphabet
 while (!($solved) -and ($guessNumber -lt 6)) {
     $guessNumber++
@@ -87,6 +88,7 @@ while (!($solved) -and ($guessNumber -lt 6)) {
         PrintGuesses -guessNumber $guessNumber
     }
 }
+Write-Host "`n`r"
 if ($solved) {
     Write-Host "`nAnswer : $($word.ToUpper())" -ForegroundColor White -BackgroundColor Green
 }
