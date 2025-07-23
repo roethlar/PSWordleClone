@@ -33,24 +33,27 @@ function PrintGuesses($guessNumber) {
 }
 
 function ProcessGuess($guess, $word) {
-    $result = @()
     $wordArray = $word.ToCharArray()
     $guessArray = $guess.ToCharArray()
     
+    # Initialize result array with proper structure
+    $result = @()
+    for ($i = 0; $i -lt $guess.Length; $i++) {
+        $result += @{
+            Position = $i
+            Letter = $guessArray[$i]
+            Color = "Gray"
+        }
+    }
+    
     # Create arrays to track used letters
     $wordUsed = @($false) * $word.Length
-    $guessProcessed = @($false) * $guess.Length
     
     # First pass: Mark exact matches (Green)
     for ($i = 0; $i -lt $guess.Length; $i++) {
         if ($guessArray[$i] -eq $wordArray[$i]) {
-            $result += @{
-                Position = $i
-                Letter = $guessArray[$i]
-                Color = "Green"
-            }
+            $result[$i].Color = "Green"
             $wordUsed[$i] = $true
-            $guessProcessed[$i] = $true
             
             # Update alphabet color
             if (($alphabetArray | Where-Object {$_.Letter -eq $guessArray[$i]}).Color -ne "Green") {
@@ -61,17 +64,11 @@ function ProcessGuess($guess, $word) {
     
     # Second pass: Mark wrong position matches (Yellow)
     for ($i = 0; $i -lt $guess.Length; $i++) {
-        if (-not $guessProcessed[$i]) {
-            $foundMatch = $false
+        if ($result[$i].Color -eq "Gray") {
             for ($j = 0; $j -lt $word.Length; $j++) {
                 if (-not $wordUsed[$j] -and $guessArray[$i] -eq $wordArray[$j]) {
-                    $result += @{
-                        Position = $i
-                        Letter = $guessArray[$i]
-                        Color = "Yellow"
-                    }
+                    $result[$i].Color = "Yellow"
                     $wordUsed[$j] = $true
-                    $foundMatch = $true
                     
                     # Update alphabet color (only if not already green)
                     if (($alphabetArray | Where-Object {$_.Letter -eq $guessArray[$i]}).Color -ne "Green") {
@@ -81,20 +78,14 @@ function ProcessGuess($guess, $word) {
                 }
             }
             
-            # If no match found, mark as gray
-            if (-not $foundMatch) {
-                $result += @{
-                    Position = $i
-                    Letter = $guessArray[$i]
-                    Color = "Gray"
-                }
-                ChangeColor $guessArray[$i] "DarkGray"
+            # If still gray, update alphabet
+            if ($result[$i].Color -eq "Gray") {
+                ChangeColor $result[$i].Letter "DarkGray"
             }
         }
     }
     
-    # Sort result by position to maintain order
-    return $result | Sort-Object Position
+    return $result
 }
 
 # Initialize alphabet array
